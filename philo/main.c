@@ -6,13 +6,22 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:53:43 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/10 22:41:30 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/11 12:41:34 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static int init_info_and_check_valid(int argc, char **argv, t_info *info, struct timeval *tv)
+long long	get_current_time(void)
+{
+	struct timeval	tv;
+
+	if (gettimeofday(&tv, NULL) == -1)
+		return (-1);
+	return(tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
+
+static int init_info_and_check_valid(int argc, char **argv, t_info *info)
 {
 	info->num_of_philo = ft_atoi(argv[1]);
 	info->time_to_die = ft_atoi(argv[2]);
@@ -30,7 +39,9 @@ static int init_info_and_check_valid(int argc, char **argv, t_info *info, struct
 		if (info->must_eat_count <= 0)
 			return (KO);
 	}
-	info->start_time = gettimeofday(tv, NULL);// 이거 맞냐...
+	info->start_time = get_current_time();// 이거 맞냐...
+	if (info->start_time == -1)
+		return (KO);
 	return (OK);
 }
 
@@ -39,7 +50,12 @@ int	guarded_malloc(void **addr, int size)
 	*addr = malloc(size);
 	if (!addr)
 		return (KO);
-	return (0);
+	return (OK);
+}
+
+void	*pthread_func(void *data)
+{
+	return ((void *)data);
 }
 
 int init_philo(t_philo **philos, t_info info)
@@ -53,12 +69,16 @@ int init_philo(t_philo **philos, t_info info)
 	{
 		(*philos)[i].id = i;
 		(*philos)[i].eat_cnt = 0;
+		if (pthread_create((*philos)[i].tid, NULL, pthread_func, 1) != OK) //// 주소가 드가야하는데 이거맞나....
+			return (KO);
 	}
 	return (OK);
 }
 
-void print_philo(t_philo *philos, t_info info)
+void print_arg(t_philo *philos, t_info info)
 {
+	printf("%lld\n", info.start_time);
+
 	for (int i = 0; i < info.num_of_philo; i++)
 	{
 		printf("%d %d\n", philos[i].id, philos[i].eat_cnt);
@@ -71,14 +91,14 @@ int main(int argc, char **argv) // 등신도 알아볼 수 있는 직관성 갑 
 {
 	t_info info;
 	t_philo *philos;
-	struct timeval	tv;
 
 	if (argc != 5 && argc != 6)
 		return (print_error("argument error"));
-	if (init_info_and_check_valid(argc, argv, &info, &tv) == KO)
+	if (init_info_and_check_valid(argc, argv, &info) == KO)
 		return (print_error("argument error"));
 	if (init_philo(&philos, info) == KO)
-		return (print_error("malloc error"));
-	print_philo(philos, info);
+		return (print_error("init error"));
+	print_arg(philos, info);
 	// execute_philo(philos, info);
+	// philo free
 }
