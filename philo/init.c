@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:31:47 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/12 17:53:32 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/12 18:36:24 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,9 @@ int init_info(int argc, char **argv, t_info *info)
 	info->time_to_die = ft_atoi(argv[2]);
 	info->time_to_eat = ft_atoi(argv[3]);
 	info->time_to_sleep = ft_atoi(argv[4]);
-	if (info->num_of_philos <= 0 || info->time_to_die < 0 || info->time_to_eat < 0 || info->time_to_sleep < 0)
-	{
+	if (info->num_of_philos <= 0 || info->time_to_die < 0
+		|| info->time_to_eat < 0 || info->time_to_sleep < 0)
 		return (KO);
-	}
 	if (argc == 5)
 		info->must_eat_count = 0;
 	else
@@ -31,6 +30,7 @@ int init_info(int argc, char **argv, t_info *info)
 			return (KO);
 	}
 	info->start_time = get_current_time();
+	info->full_philo_cnt = 0;
 	if (info->start_time == KO)
 		return (KO);
 	return (OK);
@@ -48,7 +48,8 @@ int init_philos(t_philo **philos, int num_of_philos, pthread_mutex_t *forks)
 		(*philos)[i].id = i;
 		(*philos)[i].eat_cnt = 0;
 		(*philos)[i].left = &forks[i % num_of_philos];
-		(*philos)[i].left = &forks[(i + 1) % num_of_philos];
+		(*philos)[i].right = &forks[(i + 1) % num_of_philos];
+		(*philos)[i].last_eat_time = 0; ////////////
 		// if (pthread_create(&(*philos)[i].thread_id, NULL, pthread_func, 1) != OK) //// 주소가 드가야하는데 이거맞나....
 			// return (KO);
 	}
