@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 16:47:00 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/10 23:50:51 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/12 17:34:28 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,37 @@ int	ft_atoi(char *str)
 		return (-1);
 	return (result);
 }
+
 int	print_error(char *message)
 {
 	printf("%s\n", message);
 	//구조체 free도 나중에
 	return(1); // exit 안됨 외않되
+}
+
+long long	get_current_time(void)
+{
+	struct timeval	tv;
+
+	if (gettimeofday(&tv, NULL) == -1)
+		return (KO);
+	return(tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
+
+int	guarded_malloc(void **addr, int size)
+{
+	*addr = malloc(size);
+	if (!addr)
+		return (KO);
+	return (OK);
+}
+
+void	free_all(t_philo *philos, pthread_mutex_t *forks) //이름 생각이안난다
+{
+	if (philos)
+		free (philos);
+	if (forks)
+		free(forks);
 }
 
 int	print_error_and_free_philos(char *message, t_philo **philos)
