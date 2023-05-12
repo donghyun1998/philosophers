@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:31:47 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/12 17:50:48 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/12 17:53:32 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ int init_philos(t_philo **philos, int num_of_philos, pthread_mutex_t *forks)
 	{
 		(*philos)[i].id = i;
 		(*philos)[i].eat_cnt = 0;
-		(*philos)[i].left = forks[i % num_of_philos];
-		(*philos)[i].left = forks[(i + 1) % num_of_philos];
+		(*philos)[i].left = &forks[i % num_of_philos];
+		(*philos)[i].left = &forks[(i + 1) % num_of_philos];
 		// if (pthread_create(&(*philos)[i].thread_id, NULL, pthread_func, 1) != OK) //// 주소가 드가야하는데 이거맞나....
 			// return (KO);
 	}
