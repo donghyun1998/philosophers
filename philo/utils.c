@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 16:47:00 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/12 17:34:28 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/13 18:17:03 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,17 +61,17 @@ int	guarded_malloc(void **addr, int size)
 	return (OK);
 }
 
-void	free_all(t_philo *philos, pthread_mutex_t *forks) //이름 생각이안난다
+void	free_all(int num_of_philos, t_philo *philos, pthread_mutex_t *forks) //이름 생각이안난다
 {
+	int	i;
+
+	i = -1;
 	if (philos)
 		free (philos);
 	if (forks)
+	{
+		while (++i < num_of_philos)
+			pthread_mutex_destroy(&forks[i]);
 		free(forks);
-}
-
-int	print_error_and_free_philos(char *message, t_philo **philos)
-{
-	printf("%s\n", message);
-	free(philos);
-	return(1); // exit 안됨 외않되
+	}
 }

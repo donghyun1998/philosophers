@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:31:47 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/12 18:36:24 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/13 15:26:57 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,22 +36,21 @@ int init_info(int argc, char **argv, t_info *info)
 	return (OK);
 }
 
-int init_philos(t_philo **philos, int num_of_philos, pthread_mutex_t *forks)
+int init_philos(t_philo **philos, t_info *info, pthread_mutex_t *forks)
 {
 	int i;
 
-	if (guarded_malloc((void **)philos, sizeof(t_philo) * num_of_philos) == KO)
+	if (guarded_malloc((void **)philos, sizeof(t_philo) * info->num_of_philos) == KO)
 		return (KO);
 	i = -1;
-	while (++i < num_of_philos)
+	while (++i < info->num_of_philos)
 	{
 		(*philos)[i].id = i;
 		(*philos)[i].eat_cnt = 0;
-		(*philos)[i].left = &forks[i % num_of_philos];
-		(*philos)[i].right = &forks[(i + 1) % num_of_philos];
+		(*philos)[i].left = &forks[i % info->num_of_philos];
+		(*philos)[i].right = &forks[(i + 1) % info->num_of_philos];
 		(*philos)[i].last_eat_time = 0; ////////////
-		// if (pthread_create(&(*philos)[i].thread_id, NULL, pthread_func, 1) != OK) //// 주소가 드가야하는데 이거맞나....
-			// return (KO);
+		(*philos)[i].info = info;
 	}
 	return (OK);
 }
