@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:53:43 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/13 20:59:13 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/13 21:16:18 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void *thread_func(void *philos)
 	t_philo *philo;
 
 	philo = (t_philo *)philos;
+	printf("%d번 철학자 시작!\n", philo->id);
 	while (philo->info->must_eat_count == 0 || philo->eat_cnt < philo->info->must_eat_count)
 	{
 		if (philo->id % 2 == 1)
@@ -63,6 +64,8 @@ void init_thread(t_philo *philos, t_info *info)
 	// 여기부터 모니터링 쓰레드로 쓴다.
 	while (1)
 	{
+		printf("%d\n", info->full_philo_cnt);
+		sleep(1);
 		if (info->full_philo_cnt == info->num_of_philos)
 		{
 			printf("끝\n");
@@ -77,6 +80,7 @@ int main(int argc, char **argv) // 등신도 알아볼 수 있는 직관성 갑 
 	t_philo			*philos;
 	pthread_mutex_t *forks;
 
+	info = NULL;
 	philos = NULL;
 	forks = NULL;
 	if (argc != 5 && argc != 6)
