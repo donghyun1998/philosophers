@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:56:23 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/13 18:29:11 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/13 18:41:28 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdio.h>
-# include <sys/time.h> // gettimeofday func
-# include <pthread.h> // thread func
+# include <sys/time.h>
+# include <pthread.h>
 
 #define KO	1
 #define OK	0

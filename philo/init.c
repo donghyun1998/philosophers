@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:31:47 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/13 15:26:57 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/13 18:37:08 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int init_info(int argc, char **argv, t_info *info)
 		|| info->time_to_eat < 0 || info->time_to_sleep < 0)
 		return (KO);
 	if (argc == 5)
-		info->must_eat_count = 0;
+		info->must_eat_count = -1; // 무한 루프 돌게 하기 위함
 	else
 	{
 		info->must_eat_count = ft_atoi(argv[5]);
@@ -49,7 +49,7 @@ int init_philos(t_philo **philos, t_info *info, pthread_mutex_t *forks)
 		(*philos)[i].eat_cnt = 0;
 		(*philos)[i].left = &forks[i % info->num_of_philos];
 		(*philos)[i].right = &forks[(i + 1) % info->num_of_philos];
-		(*philos)[i].last_eat_time = 0; ////////////
+		(*philos)[i].last_eat_time = 0;
 		(*philos)[i].info = info;
 	}
 	return (OK);
