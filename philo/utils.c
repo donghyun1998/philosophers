@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 16:47:00 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/13 18:17:03 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/13 19:50:06 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,4 +74,13 @@ void	free_all(int num_of_philos, t_philo *philos, pthread_mutex_t *forks) //ì´ë
 			pthread_mutex_destroy(&forks[i]);
 		free(forks);
 	}
+}
+
+void	msleep(long long target_time)
+{
+	long long	start_time;
+
+	start_time = get_current_time();
+	while (target_time > get_current_time() - start_time)
+		usleep(1000);
 }

@@ -6,30 +6,30 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:53:43 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/13 19:04:29 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/13 19:57:27 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	*thread_func(void *philos)
+void *thread_func(void *philos)
 {
-	t_philo	*philo;
+	t_philo *philo;
 
 	philo = (t_philo *)philos;
-	while (philo->eat_cnt != philo->info->must_eat_count) // 먹어야 하는 횟수 없으면 무한루프 돔
+	while (philo->info->must_eat_count == 0 || philo->eat_cnt < philo->info->must_eat_count)
 	{
 		if (philo->id % 2 == 1)
-			usleep(1000); // 짝수 먼저 가즈아
+			msleep(1000); // 짝수 먼저 가즈아
 		pthread_mutex_lock(philo->left);
 		pthread_mutex_lock(philo->right);
 		//======== critical section ====================================================================
 		if ((get_current_time() - philo->info->start_time) > philo->info->time_to_die)
 		{
-			printf("%d번 철학자 사망", philo->id);// 굶어 죽었음 처리
+			printf("%d번 철학자 사망", philo->id); // 굶어 죽었음 처리
 			pthread_mutex_unlock(philo->left);
 			pthread_mutex_unlock(philo->right);
-			return ;
+			return;
 		}
 		else
 		{
@@ -40,14 +40,14 @@ void	*thread_func(void *philos)
 		//======== critical section ====================================================================
 		pthread_mutex_unlock(philo->left);
 		pthread_mutex_unlock(philo->right);
-		usleep(philo->info->time_to_sleep * 1000);
+		msleep(philo->info->time_to_sleep * 1000); // usleep 랲핑해야함
 	}
-	philo->info->full_philo_cnt++; // 다머금
+	philo->info->full_philo_cnt++; // 다머금 // 이거 아닌거같은데 필로 죽으면 안됨
 }
 
-void	init_thread(t_philo *philos, t_info *info)
+void init_thread(t_philo *philos, t_info *info)
 {
-	int	i;
+	int i;
 
 	i = -1;
 	while (++i < info->num_of_philos)
@@ -60,9 +60,9 @@ void	init_thread(t_philo *philos, t_info *info)
 
 int main(int argc, char **argv) // 등신도 알아볼 수 있는 직관성 갑 함수명을 짜보자 new 동현 출발
 {
-	t_info			info;
-	t_philo			*philos;
-	pthread_mutex_t	*forks;
+	t_info info;
+	t_philo *philos;
+	pthread_mutex_t *forks;
 
 	philos = NULL;
 	forks = NULL;
@@ -76,6 +76,6 @@ int main(int argc, char **argv) // 등신도 알아볼 수 있는 직관성 갑 
 		return (print_error("init error"));
 	}
 	init_thread(philos, &info);
-	//monitoring thread 어케하지...
+	// monitoring thread 어케하지...
 	free_all(info.full_philo_cnt, philos, forks);
 }
