@@ -6,7 +6,7 @@
 #    By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/29 00:02:12 by donghyk2          #+#    #+#              #
-#    Updated: 2023/05/12 17:34:56 by donghyk2         ###   ########.fr        #
+#    Updated: 2023/05/13 20:06:11 by donghyk2         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME			= philo
 CC				= @cc
 CFLAGS			= -Wall -Werror -Wextra -pthread
 
-SRC				= main.c utils.c init.c
+SRC				= main.c utils.c init.c wrapping_func.c
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

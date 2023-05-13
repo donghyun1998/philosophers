@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:53:43 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/13 19:57:27 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/13 20:47:32 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void *thread_func(void *philos)
 			printf("%d번 철학자 사망", philo->id); // 굶어 죽었음 처리
 			pthread_mutex_unlock(philo->left);
 			pthread_mutex_unlock(philo->right);
-			return;
+			return (NULL); // 이거 맞나?
 		}
 		else
 		{
@@ -40,9 +40,12 @@ void *thread_func(void *philos)
 		//======== critical section ====================================================================
 		pthread_mutex_unlock(philo->left);
 		pthread_mutex_unlock(philo->right);
-		msleep(philo->info->time_to_sleep * 1000); // usleep 랲핑해야함
+		msleep(philo->info->time_to_sleep * 1000);
 	}
+	pthread_mutex_lock(&(philo->info->mutex_of_full_philo_cnt));
 	philo->info->full_philo_cnt++; // 다머금 // 이거 아닌거같은데 필로 죽으면 안됨
+	pthread_mutex_unlock(&(philo->info->mutex_of_full_philo_cnt));
+	return (NULL);
 }
 
 void init_thread(t_philo *philos, t_info *info)
@@ -55,13 +58,13 @@ void init_thread(t_philo *philos, t_info *info)
 		pthread_create(&(philos->thread_id), NULL, thread_func, &philos[i]);
 		pthread_detach(philos->thread_id); // 이거맞나...
 	}
-	// 여기부터 모니터링 스레드로 쓴다.
+	// 여기부터 모니터링 쓰레드로 쓴다.
 }
 
 int main(int argc, char **argv) // 등신도 알아볼 수 있는 직관성 갑 함수명을 짜보자 new 동현 출발
 {
-	t_info info;
-	t_philo *philos;
+	t_info			*info;
+	t_philo			*philos;
 	pthread_mutex_t *forks;
 
 	philos = NULL;
@@ -69,13 +72,12 @@ int main(int argc, char **argv) // 등신도 알아볼 수 있는 직관성 갑 
 	if (argc != 5 && argc != 6)
 		return (print_error("argument error"));
 	if (init_info(argc, argv, &info) == KO
-		|| init_forks(&forks, info.num_of_philos) == KO
-		|| init_philos(&philos, &info, forks) == KO)
+		|| init_forks(&forks, info->num_of_philos) == KO
+		|| init_philos(&philos, info, forks) == KO)
 	{
-		free_all(info.full_philo_cnt, philos, forks);
+		free_all(info, philos, forks);
 		return (print_error("init error"));
 	}
-	init_thread(philos, &info);
-	// monitoring thread 어케하지...
-	free_all(info.full_philo_cnt, philos, forks);
+	init_thread(philos, info);
+	free_all(info, philos, forks);
 }

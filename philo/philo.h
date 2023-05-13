@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:56:23 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/13 18:41:28 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/13 20:38:31 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef struct s_info
 	int			must_eat_count; // 여기까지만 philo가 접근 가능하게 구조체 분할할까
 	// 여기다 fork 배열 만들면 필로끼리 접근 가능한디....
 	long long	start_time;
+	pthread_mutex_t	mutex_of_full_philo_cnt; /////
 	int			full_philo_cnt; // 배부른애들 숫자 == num_of_philo 면 끝
 }	t_info;
 
@@ -48,9 +49,10 @@ typedef struct s_philo
 int			ft_atoi(char *str);
 int			print_error(char *message);
 int			guarded_malloc(void **addr, int size);
-void		free_all(int num_of_philos, t_philo *philos, pthread_mutex_t *forks);
+void		free_all(t_info *info, t_philo *philos, pthread_mutex_t *forks);
 long long	get_current_time(void);
-int			init_info(int argc, char **argv, t_info *info);
+int			init_info(int argc, char **argv, t_info **info);
 int			init_philos(t_philo **philos, t_info *info, pthread_mutex_t *forks);
 int			init_forks(pthread_mutex_t **forks, int num_of_philos);
+void		msleep(long long target_time);
 #endif
