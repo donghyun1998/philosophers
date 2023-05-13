@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:53:43 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/13 20:47:32 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/13 20:59:13 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,16 @@ void *thread_func(void *philos)
 		//======== critical section ====================================================================
 		if ((get_current_time() - philo->info->start_time) > philo->info->time_to_die)
 		{
-			printf("%d번 철학자 사망", philo->id); // 굶어 죽었음 처리
+			printf("%d번 철학자 사망\n", philo->id); // 굶어 죽었음 처리
 			pthread_mutex_unlock(philo->left);
 			pthread_mutex_unlock(philo->right);
 			return (NULL); // 이거 맞나?
 		}
 		else
 		{
-			usleep(philo->info->time_to_eat * 1000);
+			msleep(philo->info->time_to_eat * 1000);
 			philo->eat_cnt++;
+			printf("%d번 철학자 먹었다\n", philo->id);
 			philo->last_eat_time = get_current_time();
 		}
 		//======== critical section ====================================================================
@@ -45,6 +46,7 @@ void *thread_func(void *philos)
 	pthread_mutex_lock(&(philo->info->mutex_of_full_philo_cnt));
 	philo->info->full_philo_cnt++; // 다머금 // 이거 아닌거같은데 필로 죽으면 안됨
 	pthread_mutex_unlock(&(philo->info->mutex_of_full_philo_cnt));
+	printf("%d번 철학자 배불러사망\n", philo->id);
 	return (NULL);
 }
 
@@ -59,6 +61,14 @@ void init_thread(t_philo *philos, t_info *info)
 		pthread_detach(philos->thread_id); // 이거맞나...
 	}
 	// 여기부터 모니터링 쓰레드로 쓴다.
+	while (1)
+	{
+		if (info->full_philo_cnt == info->num_of_philos)
+		{
+			printf("끝\n");
+			exit(0); ////////////
+		}
+	}
 }
 
 int main(int argc, char **argv) // 등신도 알아볼 수 있는 직관성 갑 함수명을 짜보자 new 동현 출발
