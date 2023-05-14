@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:31:47 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/14 22:59:05 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/14 23:21:34 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ int init_info(int argc, char **argv, t_info **info)
 	(*info)->dead_philo_flag = 0;
 	if (pthread_mutex_init(&((*info)->mutex_of_full_philo_cnt), NULL) != OK)
 		return (KO);
+	if (pthread_mutex_init(&((*info)->mutex_of_dead_philo_flag), NULL) != OK)
+		return (KO);
 	return (OK);
 }
 
@@ -52,7 +54,7 @@ int init_philos(t_philo **philos, t_info *info, pthread_mutex_t *forks)
 		(*philos)[i].eat_cnt = 0;
 		(*philos)[i].left = &forks[i % info->num_of_philos];
 		(*philos)[i].right = &forks[(i + 1) % info->num_of_philos];
-		(*philos)[i].last_eat_time = 0;
+		(*philos)[i].last_eat_time = info->start_time;
 		(*philos)[i].info = info;
 	}
 	return (OK);

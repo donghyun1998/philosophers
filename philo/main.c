@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:53:43 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/14 23:01:23 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/14 23:44:36 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,21 +17,23 @@ int	eat_or_die(t_philo *philo) // 이름 뭐로하지
 	pthread_mutex_lock(philo->left);
 	printf("%lld %d has taken a left fork\n",get_current_millisec() - philo->info->start_time, philo->id);
 	pthread_mutex_lock(philo->right); // 여기서 함수로 빼서 죽는 시간 확인해야 할듯
-	printf("%lld %d has taken a right fork\n",get_current_millisec() - philo->info->start_time, philo->id);
-	if ((get_current_millisec() - philo->info->start_time) > philo->info->time_to_die)
+	printf("%lld %d has taken a right fork\n",get_current_millisec() - philo->info->start_time, philo->id); //// leftright 지우기
+	if ((get_current_millisec() - philo->last_eat_time) >= philo->info->time_to_die)
 	{ // 굶어죽음
 		printf("%lld %d died\n",get_current_millisec() - philo->info->start_time, philo->id);
-		philo->info->dead_philo_flag = 1; // 뮤텍스 필없음 초기화 해주는거기때문에 자원소모 ㄴ
+		pthread_mutex_lock(&(philo->info->mutex_of_dead_philo_flag));
+		philo->info->dead_philo_flag = 1;
+		pthread_mutex_unlock(&(philo->info->mutex_of_dead_philo_flag));
 	}
 	else // 먹을 때
 	{
 		printf("%lld %d is eating\n",get_current_millisec() - philo->info->start_time, philo->id);
-		msleep(philo->info->time_to_eat);
-		philo->eat_cnt++;
 		philo->last_eat_time = get_current_millisec();
+		philo->eat_cnt++;
+		msleep(philo->info->time_to_eat);
 	}
-	pthread_mutex_unlock(philo->left);
 	pthread_mutex_unlock(philo->right);
+	pthread_mutex_unlock(philo->left);
 	if (philo->info->dead_philo_flag)
 		return (KO);
 	return (OK);
@@ -42,10 +44,10 @@ void *thread_func(void *philos)
 	t_philo *philo;
 
 	philo = (t_philo *)philos;
+	if (philo->id % 2 == 1)
+		msleep(philo->info->time_to_eat); // 짝수 먼저 가즈아
 	while (philo->info->must_eat_count == 0 || philo->eat_cnt < philo->info->must_eat_count)
 	{
-		if (philo->id % 2 == 1)
-			msleep(1000); // 짝수 먼저 가즈아
 		//======== critical section ====================================================================
 		if (eat_or_die(philo) == KO)
 			return (NULL);
@@ -73,7 +75,7 @@ void	init_thread(t_philo *philos, t_info *info)
 	// 여기부터 모니터링 쓰레드로 쓴다. 그냥 필로 쓰레드에서 찍어도 될거같은데 굳이 모니터링스레드가 필요한가?
 	while (1)
 	{
-		// printf("%d\n", info->full_philo_cnt);
+
 		if (info->dead_philo_flag)
 			exit(1); /////////// 에러 처리
 		if (info->full_philo_cnt == info->num_of_philos)
