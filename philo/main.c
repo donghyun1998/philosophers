@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:53:43 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/14 23:44:36 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/14 23:48:20 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,5 +105,5 @@ int main(int argc, char **argv) // 등신도 알아볼 수 있는 직관성 갑 
 		return (print_error("init error"));
 	}
 	init_thread(philos, info);
-	free_all(info, philos, forks);
+	// free_all(info, philos, forks); // 해주면 안됨
 }
