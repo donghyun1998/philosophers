@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:56:23 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/14 19:37:43 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/14 22:58:10 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int			ft_atoi(char *str);
 int			print_error(char *message);
 int			guarded_malloc(void **addr, int size);
 void		free_all(t_info *info, t_philo *philos, pthread_mutex_t *forks);
-long long	get_current_time(void);
+long long	get_current_millisec(void);
 int			init_info(int argc, char **argv, t_info **info);
 int			init_philos(t_philo **philos, t_info *info, pthread_mutex_t *forks);
 int			init_forks(pthread_mutex_t **forks, int num_of_philos);
