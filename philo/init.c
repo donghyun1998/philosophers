@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:31:47 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/13 20:48:42 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/14 19:00:35 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,9 @@ int init_info(int argc, char **argv, t_info **info)
 	if (guarded_malloc((void **)info, sizeof(t_info)) == KO)
 		return (KO);
 	(*info)->num_of_philos = ft_atoi(argv[1]);
-	(*info)->time_to_die = ft_atoi(argv[2]);
-	(*info)->time_to_eat = ft_atoi(argv[3]);
-	(*info)->time_to_sleep = ft_atoi(argv[4]);
+	(*info)->time_to_die = ft_atoi(argv[2]) * 1000;
+	(*info)->time_to_eat = ft_atoi(argv[3]) * 1000;
+	(*info)->time_to_sleep = ft_atoi(argv[4]) * 1000;
 	if ((*info)->num_of_philos <= 0 || (*info)->time_to_die < 0
 		|| (*info)->time_to_eat < 0 || (*info)->time_to_sleep < 0)
 		return (KO);
@@ -33,7 +33,7 @@ int init_info(int argc, char **argv, t_info **info)
 	}
 	(*info)->start_time = get_current_time();
 	(*info)->full_philo_cnt = 0;
-	if ((*info)->start_time == KO)
+	if ((*info)->start_time == -1)
 		return (KO);
 	if (pthread_mutex_init(&((*info)->mutex_of_full_philo_cnt), NULL) != OK)
 		return (KO);

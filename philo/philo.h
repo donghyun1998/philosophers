@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:56:23 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/13 20:38:31 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/14 18:48:14 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,10 @@
 typedef struct s_info
 {
 	int			num_of_philos;
-	int			time_to_die;
-	int			time_to_eat;
-	int			time_to_sleep;
-	int			must_eat_count; // 여기까지만 philo가 접근 가능하게 구조체 분할할까
-	// 여기다 fork 배열 만들면 필로끼리 접근 가능한디....
+	long long	time_to_die;
+	long long	time_to_eat;
+	long long	time_to_sleep;
+	int			must_eat_count;
 	long long	start_time;
 	pthread_mutex_t	mutex_of_full_philo_cnt; /////
 	int			full_philo_cnt; // 배부른애들 숫자 == num_of_philo 면 끝

@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:53:43 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/13 21:16:18 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/14 19:04:50 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ void *thread_func(void *philos)
 	while (philo->info->must_eat_count == 0 || philo->eat_cnt < philo->info->must_eat_count)
 	{
 		if (philo->id % 2 == 1)
-			msleep(1000); // 짝수 먼저 가즈아
+			usleep(1000); // 짝수 먼저 가즈아
 		pthread_mutex_lock(philo->left);
-		pthread_mutex_lock(philo->right);
+		pthread_mutex_lock(philo->right); // 여기서 함수로 빼서 죽는 시간 확인해야 할듯
 		//======== critical section ====================================================================
 		if ((get_current_time() - philo->info->start_time) > philo->info->time_to_die)
 		{
@@ -34,7 +34,7 @@ void *thread_func(void *philos)
 		}
 		else
 		{
-			msleep(philo->info->time_to_eat * 1000);
+			usleep(philo->info->time_to_eat);
 			philo->eat_cnt++;
 			printf("%d번 철학자 먹었다\n", philo->id);
 			philo->last_eat_time = get_current_time();
@@ -42,7 +42,7 @@ void *thread_func(void *philos)
 		//======== critical section ====================================================================
 		pthread_mutex_unlock(philo->left);
 		pthread_mutex_unlock(philo->right);
-		msleep(philo->info->time_to_sleep * 1000);
+		usleep(philo->info->time_to_sleep);
 	}
 	pthread_mutex_lock(&(philo->info->mutex_of_full_philo_cnt));
 	philo->info->full_philo_cnt++; // 다머금 // 이거 아닌거같은데 필로 죽으면 안됨
@@ -61,10 +61,10 @@ void init_thread(t_philo *philos, t_info *info)
 		pthread_create(&(philos->thread_id), NULL, thread_func, &philos[i]);
 		pthread_detach(philos->thread_id); // 이거맞나...
 	}
-	// 여기부터 모니터링 쓰레드로 쓴다.
+	// 여기부터 모니터링 쓰레드로 쓴다. 그냥 필로 쓰레드에서 찍어도 될거같은데 굳이 모니터링스레드가 필요한가?
 	while (1)
 	{
-		printf("%d\n", info->full_philo_cnt);
+		// printf("%d\n", info->full_philo_cnt);
 		sleep(1);
 		if (info->full_philo_cnt == info->num_of_philos)
 		{
