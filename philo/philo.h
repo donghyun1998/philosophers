@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:56:23 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/14 18:48:14 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/14 19:37:43 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct s_info
 	long long	start_time;
 	pthread_mutex_t	mutex_of_full_philo_cnt; /////
 	int			full_philo_cnt; // 배부른애들 숫자 == num_of_philo 면 끝
+	int			dead_philo_flag;
 }	t_info;
 
 typedef struct s_philo

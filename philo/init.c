@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:31:47 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/14 19:00:35 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/14 21:05:57 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,7 @@ int init_info(int argc, char **argv, t_info **info)
 	}
 	(*info)->start_time = get_current_time();
 	(*info)->full_philo_cnt = 0;
-	if ((*info)->start_time == -1)
-		return (KO);
+	(*info)->dead_philo_flag = 0;
 	if (pthread_mutex_init(&((*info)->mutex_of_full_philo_cnt), NULL) != OK)
 		return (KO);
 	return (OK);

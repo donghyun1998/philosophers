@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:05:18 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/14 19:08:43 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/14 21:21:37 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,6 @@ void	msleep(long long target_time)
 	long long	start_time;
 
 	start_time = get_current_time();
-	if (start_time == -1)
-	{
-		usleep(target_time);
-		return ; // 다른 예외처리 뭐가 있을까...
-	}
 	while (target_time > get_current_time() - start_time)
 		usleep(1000);
 }
@@ -41,11 +36,10 @@ int	print_error(char *message)
 	return(1); // exit 안됨 외않되
 }
 
-long long	get_current_time(void) // 여기다 *status를 넣어볼까
+long long	get_current_time(void)
 {
 	struct timeval	tv;
 
-	if (gettimeofday(&tv, NULL) == -1)
-		return (-1);
+	gettimeofday(&tv, NULL);
 	return(tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
