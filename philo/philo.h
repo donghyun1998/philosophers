@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:56:23 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/15 21:30:29 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/15 22:06:37 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ typedef struct s_philo
 {
 	// pthread_t		thread_id;
 	int				id;
-	int				eat_cnt;
-	long long		last_eat_time;
+	int				eat_cnt; // 이것도 걸어준
+	long long		last_eat_time; // 두개 묶어서 걸어줌
 	pthread_mutex_t	*left; // 야 기가 막힌다
 	pthread_mutex_t	*right; // 야 기가 막힌다
 	t_info			*info;

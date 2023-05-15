@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:05:18 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/15 21:06:53 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/15 21:49:18 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	msleep(long long target_time)
 	while (target_time > get_current_millisec() - start_time)
 	{
 		// printf("%lld, %lld\n", target_time ,get_current_millisec(info));
-		usleep(100);
+		usleep(1000);
 	}
 }
 
