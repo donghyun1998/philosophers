@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:53:43 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/14 23:48:20 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/15 20:57:28 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,13 +75,21 @@ void	init_thread(t_philo *philos, t_info *info)
 	// 여기부터 모니터링 쓰레드로 쓴다. 그냥 필로 쓰레드에서 찍어도 될거같은데 굳이 모니터링스레드가 필요한가?
 	while (1)
 	{
-
 		if (info->dead_philo_flag)
 			exit(1); /////////// 에러 처리
 		if (info->full_philo_cnt == info->num_of_philos)
 		{
 			printf("끝\n");
 			exit(0); ////////////
+		}
+		i = -1;
+		while (++i < info->num_of_philos)
+		{
+			if (get_current_millisec() - philos->last_eat_time > info->time_to_die)
+			{
+				printf("%d필로죽음\n", i);
+				exit(1);
+			}
 		}
 	}
 }
