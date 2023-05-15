@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:53:43 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/15 22:16:15 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/15 23:19:01 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,20 +61,31 @@ void	*thread_func_philo(void *philos)
 	return (NULL);
 }
 
-void	*thread_func_monitor(void *philos)
-{
-	t_philo *philo;
+// void	*thread_func_monitor(void **philos)
+// {
+// 	t_philo **philo;
+// 	t_info	*info;
+// 	int		i;
 
-	philo = (t_philo *)philos;
-
-	while (get_current_millisec() - philo->last_eat_time < philo->info->time_to_die)
-		;
-	pthread_mutex_lock(&(philo->info->mutex_of_dead_philo_flag));
-	philo->info->dead_philo_flag = 1;
-	pthread_mutex_unlock(&(philo->info->mutex_of_dead_philo_flag));
-	printf("%lld %d died\n",get_current_millisec() - philo->info->start_time, philo->id);
-	return (NULL);
-}
+// 	info = (*philo)[0].info;
+// 	philo = (t_philo **)philos;
+// 	while (42)
+// 	{
+// 		i = -1;
+// 		while (++i < info->num_of_philos)
+// 		{
+// 			if (get_current_millisec() - (*philo)[i].last_eat_time >= info->time_to_die)
+// 			{
+// 				printf("%lld %d died\n",get_current_millisec() - info->start_time, i);
+// 				pthread_mutex_lock(&(info->mutex_of_dead_philo_flag));
+// 				info->dead_philo_flag = 1;
+// 				pthread_mutex_unlock(&(info->mutex_of_dead_philo_flag));
+// 				return (NULL);
+// 			}
+// 		}
+// 	}
+// 	return (NULL);
+// }
 
 void	init_thread(t_philo *philos, t_info *info)
 {
@@ -85,12 +96,6 @@ void	init_thread(t_philo *philos, t_info *info)
 	while (++i < info->num_of_philos)
 	{
 		pthread_create(&thread_id, NULL, thread_func_philo, &philos[i]);
-		pthread_detach(thread_id);
-	}
-	i = -1;
-	while (++i < info->num_of_philos) // 모니터링스레드 필로 개수만큼
-	{
-		pthread_create(&thread_id, NULL, thread_func_monitor, &philos[i]);
 		pthread_detach(thread_id);
 	}
 	while (1)
@@ -110,15 +115,15 @@ void	init_thread(t_philo *philos, t_info *info)
 			return ; ////////////
 		}
 		pthread_mutex_unlock(&(info->mutex_of_full_philo_cnt));
-		// i = -1;
-		// while (++i < info->num_of_philos) // 필로 개수만큼 모니터링 만들어서 확인할까..?
-		// {
-		// 	if (get_current_millisec() - philos[i].last_eat_time >= info->time_to_die)
-		// 	{
-		// 		printf("%d필로죽음\n", i);
-		// 		exit(1);
-		// 	}
-		// }
+		i = -1;
+		while (++i < info->num_of_philos) // 필로 개수만큼 모니터링 만들어서 확인할까..?
+		{
+			if (get_current_millisec() - philos[i].last_eat_time >= info->time_to_die)
+			{
+				printf("%lld %d died\n",get_current_millisec() - info->start_time, i);
+				exit(1);
+			}
+		}
 	}
 }
 
