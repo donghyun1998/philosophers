@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:56:23 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/14 23:13:17 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/15 21:30:29 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ typedef struct s_info
 
 typedef struct s_philo
 {
-	pthread_t		thread_id;
+	// pthread_t		thread_id;
 	int				id;
 	int				eat_cnt;
 	long long		last_eat_time;

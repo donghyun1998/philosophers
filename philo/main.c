@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:53:43 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/15 20:57:28 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/15 21:32:53 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,13 @@ int	eat_or_die(t_philo *philo) // 이름 뭐로하지
 	return (OK);
 }
 
-void *thread_func(void *philos)
+void	*thread_func_philo(void *philos)
 {
 	t_philo *philo;
 
 	philo = (t_philo *)philos;
 	if (philo->id % 2 == 1)
-		msleep(philo->info->time_to_eat); // 짝수 먼저 가즈아
+			usleep(1000);
 	while (philo->info->must_eat_count == 0 || philo->eat_cnt < philo->info->must_eat_count)
 	{
 		//======== critical section ====================================================================
@@ -62,15 +62,36 @@ void *thread_func(void *philos)
 	return (NULL);
 }
 
+void	*thread_func_monitor(void *philos)
+{
+	t_philo *philo;
+
+	philo = (t_philo *)philos;
+
+	while (get_current_millisec() - philo->last_eat_time < philo->info->time_to_die)
+		;
+	pthread_mutex_lock(&(philo->info->mutex_of_dead_philo_flag));
+	philo->info->dead_philo_flag = 1;
+	pthread_mutex_unlock(&(philo->info->mutex_of_dead_philo_flag));
+	return (NULL);
+}
+
 void	init_thread(t_philo *philos, t_info *info)
 {
-	int i;
+	int			i;
+	pthread_t	thread_id;
 
 	i = -1;
 	while (++i < info->num_of_philos)
 	{
-		pthread_create(&(philos->thread_id), NULL, thread_func, &philos[i]);
-		pthread_detach(philos->thread_id); // 이거맞나...
+		pthread_create(&thread_id, NULL, thread_func_philo, &philos[i]);
+		pthread_detach(thread_id); // 이거맞나...
+	}
+	i = -1;
+	while (++i < info->num_of_philos) // 모니터링스레드 필로 개수만큼
+	{
+		pthread_create(&thread_id, NULL, thread_func_monitor, &philos[i]);
+		pthread_detach(thread_id);
 	}
 	// 여기부터 모니터링 쓰레드로 쓴다. 그냥 필로 쓰레드에서 찍어도 될거같은데 굳이 모니터링스레드가 필요한가?
 	while (1)
@@ -82,15 +103,15 @@ void	init_thread(t_philo *philos, t_info *info)
 			printf("끝\n");
 			exit(0); ////////////
 		}
-		i = -1;
-		while (++i < info->num_of_philos)
-		{
-			if (get_current_millisec() - philos->last_eat_time > info->time_to_die)
-			{
-				printf("%d필로죽음\n", i);
-				exit(1);
-			}
-		}
+		// i = -1;
+		// while (++i < info->num_of_philos) // 필로 개수만큼 모니터링 만들어서 확인할까..?
+		// {
+		// 	if (get_current_millisec() - philos[i].last_eat_time >= info->time_to_die)
+		// 	{
+		// 		printf("%d필로죽음\n", i);
+		// 		exit(1);
+		// 	}
+		// }
 	}
 }
 
