@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:56:23 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/16 21:30:49 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/16 21:36:30 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 # include <sys/time.h>
 # include <pthread.h>
 
-#define KO	1
-#define OK	0
+# define KO 1
+# define OK 0
 
 typedef struct s_info
 {
@@ -39,11 +39,10 @@ typedef struct s_info
 
 typedef struct s_philo
 {
-	// pthread_t		thread_id;
 	int				id;
 	pthread_mutex_t	mutex_of_eat;
-	int				eat_cnt; // 이것도 걸어준
-	long long		last_eat_time; // 두개 묶어서 걸어줌
+	int				eat_cnt;
+	long long		last_eat_time;
 	pthread_mutex_t	*left;
 	pthread_mutex_t	*right;
 	t_info			*info;
@@ -53,7 +52,7 @@ int			ft_atoi(char *str);
 int			print_error(char *message);
 int			guarded_malloc(void **addr, int size);
 void		free_all(t_info *info, t_philo *philos, pthread_mutex_t *forks);
-long long	get_current_millisec(void);
+long long	get_millisec(void);
 int			init_info(int argc, char **argv, t_info **info);
 int			init_philos(t_philo **philos, t_info *info, pthread_mutex_t *forks);
 int			init_forks(pthread_mutex_t **forks, int num_of_philos);

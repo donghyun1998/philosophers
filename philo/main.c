@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:53:43 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/16 21:30:24 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/16 21:38:48 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@ int	check_philo_is_alive(t_philo *philos, t_info *info)
 	int	i;
 
 	i = -1;
-	while (++i < info->num_of_philos) // 필로 개수만큼 모니터링 만들어서 확인할까..?
+	while (++i < info->num_of_philos)
 	{
 		pthread_mutex_lock(&(philos[i].mutex_of_eat));
-		if (get_current_millisec() - philos[i].last_eat_time >= info->time_to_die)
+		if (get_millisec() - philos[i].last_eat_time >= info->time_to_die)
 		{
 			pthread_mutex_unlock(&(philos[i].mutex_of_eat));
-			printf("%lld %d died\n",get_current_millisec() - info->start_time, i + 1);
+			printf("%lld %d died\n", get_millisec() - info->start_time, i + 1);
 			return (KO);
 		}
 		pthread_mutex_unlock(&(philos[i].mutex_of_eat));
@@ -36,7 +36,7 @@ void	monitoring_thread(t_philo *philos, t_info *info)
 	while (42)
 	{
 		pthread_mutex_lock(&(info->mutex_of_dead_philo_flag));
-		if (info->dead_philo_flag) // 죽은애 확인
+		if (info->dead_philo_flag)
 		{
 			printf("에러\n");
 			pthread_mutex_unlock(&(info->mutex_of_dead_philo_flag));
@@ -69,16 +69,16 @@ void	init_thread(t_philo *philos, t_info *info)
 		pthread_create(&thread_id, NULL, thread_func_philo, &philos[i]);
 		pthread_detach(thread_id);
 	}
-	info->start_time = get_current_millisec();
+	info->start_time = get_millisec();
 	pthread_mutex_unlock(&info->mutex_of_start_flag);
 	usleep(1000);
 }
 
-int main(int argc, char **argv) // 등신도 알아볼 수 있는 직관성 갑 함수명을 짜보자 new 동현 출발
+int	main(int argc, char **argv)
 {
 	t_info			*info;
 	t_philo			*philos;
-	pthread_mutex_t *forks;
+	pthread_mutex_t	*forks;
 
 	info = NULL;
 	philos = NULL;

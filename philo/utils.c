@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 16:47:00 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/13 20:40:09 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/16 21:39:22 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,13 @@ int	ft_atoi(char *str)
 		base++;
 	}
 	result *= minus;
-	if (result > 2147483647 || result < -2147483648 || base == 0 || base > 11 || *str)
+	if (result > 2147483647 || result < -2147483648
+		|| base == 0 || base > 11 || *str)
 		return (-1);
 	return (result);
 }
 
-void	free_all(t_info *info, t_philo *philos, pthread_mutex_t *forks) //이름 생각이안난다
+void	free_all(t_info *info, t_philo *philos, pthread_mutex_t *forks)
 {
 	int	i;
 	int	num_of_philos;
