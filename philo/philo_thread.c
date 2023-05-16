@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 21:29:32 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/17 00:59:02 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/17 01:28:04 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,22 @@
 
 void	pick_up_fork(t_philo *philo)
 {
-	if (philo->id % 2)
-	{
-		pthread_mutex_lock(philo->right);
-		pthread_mutex_lock(&philo->info->mutex_of_dead_philo_flag);
-		if (philo->info->dead_philo_flag == 0)
-			printf("%lld %d has taken a fork\n",
-				get_millisec() - philo->info->start_time, philo->id + 1);
-		pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
-		pthread_mutex_lock(philo->left);
-		pthread_mutex_lock(&philo->info->mutex_of_dead_philo_flag);
-		if (philo->info->dead_philo_flag == 0)
-			printf("%lld %d has taken a fork\n",
-				get_millisec() - philo->info->start_time, philo->id + 1);
-		pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
-	}
-	else
+	// if (philo->id % 2)
+	// {
+	// 	pthread_mutex_lock(philo->right);
+	// 	pthread_mutex_lock(&philo->info->mutex_of_dead_philo_flag);
+	// 	if (philo->info->dead_philo_flag == 0)
+	// 		printf("%lld %d has taken a fork\n",
+	// 			get_millisec() - philo->info->start_time, philo->id + 1);
+	// 	pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
+	// 	pthread_mutex_lock(philo->left);
+	// 	pthread_mutex_lock(&philo->info->mutex_of_dead_philo_flag);
+	// 	if (philo->info->dead_philo_flag == 0)
+	// 		printf("%lld %d has taken a fork\n",
+	// 			get_millisec() - philo->info->start_time, philo->id + 1);
+	// 	pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
+	// }
+	// else
 	{
 		pthread_mutex_lock(philo->left);
 		pthread_mutex_lock(&philo->info->mutex_of_dead_philo_flag);
@@ -48,12 +48,12 @@ void	pick_up_fork(t_philo *philo)
 
 void	put_down_fork(t_philo *philo)
 {
-	if (philo->id % 2)
-	{
-		pthread_mutex_unlock(philo->left);
-		pthread_mutex_unlock(philo->right);
-	}
-	else
+	// if (philo->id % 2)
+	// {
+	// 	pthread_mutex_unlock(philo->left);
+	// 	pthread_mutex_unlock(philo->right);
+	// }
+	// else
 	{
 		pthread_mutex_unlock(philo->right);
 		pthread_mutex_unlock(philo->left);
