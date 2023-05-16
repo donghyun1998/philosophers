@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:56:23 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/15 23:21:22 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/16 19:21:03 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,18 @@ typedef struct s_philo
 {
 	// pthread_t		thread_id;
 	int				id;
+	pthread_mutex_t	mutex_of_eat;
 	int				eat_cnt; // 이것도 걸어준
 	long long		last_eat_time; // 두개 묶어서 걸어줌
 	pthread_mutex_t	*left;
 	pthread_mutex_t	*right;
 	t_info			*info;
+	int			num_of_philos;
+	long long	time_to_die;
+	long long	time_to_eat;
+	long long	time_to_sleep;
+	int			must_eat_count;
+	long long	start_time;
 }	t_philo;
 
 int			ft_atoi(char *str);
