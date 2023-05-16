@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:53:43 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/17 00:14:11 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/17 00:27:45 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@ int	check_philo_is_alive(t_philo *philos, t_info *info)
 			pthread_mutex_unlock(&(philos[i].mutex_of_eat));
 			pthread_mutex_lock(&info->mutex_of_dead_philo_flag);
 			if (info->dead_philo_flag == 0)
+			{
 				printf("%lld %d died\n", get_millisec() - info->start_time, i + 1);
+				info->dead_philo_flag = 1;
+			}
 			pthread_mutex_unlock(&info->mutex_of_dead_philo_flag);
 			return (KO);
 		}

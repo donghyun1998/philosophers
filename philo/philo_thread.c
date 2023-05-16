@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 21:29:32 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/17 00:15:13 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/17 00:24:01 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ void	*thread_func_philo(void *philos)
 		pthread_mutex_lock(&philo->info->mutex_of_dead_philo_flag);
 		if (philo->info->dead_philo_flag == 0)
 			printf("%lld %d is sleeping\n",
-			get_millisec() - philo->info->start_time, philo->id + 1);
+				get_millisec() - philo->info->start_time, philo->id + 1);
 		pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
 		msleep(philo->info->time_to_sleep);
 		pthread_mutex_lock(&philo->info->mutex_of_dead_philo_flag);
