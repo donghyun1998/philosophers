@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:56:23 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/16 21:36:30 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/17 00:57:37 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct s_info
 	pthread_mutex_t	mutex_of_dead_philo_flag;
 	int				dead_philo_flag;
 	pthread_mutex_t	mutex_of_start_flag;
+	int				start_thread_cnt;
 }	t_info;
 
 typedef struct s_philo

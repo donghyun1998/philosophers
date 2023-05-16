@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:53:43 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/17 00:27:45 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/17 01:00:46 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,16 @@ void	init_thread(t_philo *philos, t_info *info)
 	}
 	info->start_time = get_millisec();
 	pthread_mutex_unlock(&info->mutex_of_start_flag);
-	usleep(1000);
+	while (1)
+	{
+		pthread_mutex_lock(&info->mutex_of_start_flag);
+		if (info->start_thread_cnt == info->num_of_philos)
+		{
+			pthread_mutex_unlock(&info->mutex_of_start_flag);
+			return ;
+		}
+		pthread_mutex_unlock(&info->mutex_of_start_flag);
+	}
 }
 
 int	main(int argc, char **argv)

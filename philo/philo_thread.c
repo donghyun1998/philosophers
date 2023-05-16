@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 21:29:32 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/17 00:24:01 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/17 00:59:02 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,14 +64,17 @@ void	check_start_flag(t_philo *philo)
 {
 	pthread_mutex_lock(&(philo->info->mutex_of_start_flag));
 	philo->last_eat_time = philo->info->start_time;
+	philo->info->start_thread_cnt += 1;
 	pthread_mutex_unlock(&(philo->info->mutex_of_start_flag));
 }
 
 int	eat_or_die(t_philo *philo)
 {
 	pick_up_fork(philo);
+	pthread_mutex_lock(&(philo->mutex_of_eat));
 	if ((get_millisec() - philo->last_eat_time) >= philo->info->time_to_die)
 	{
+		pthread_mutex_unlock(&(philo->mutex_of_eat));
 		pthread_mutex_lock(&(philo->info->mutex_of_dead_philo_flag));
 		if (philo->info->dead_philo_flag == 0)
 		{
@@ -80,13 +83,13 @@ int	eat_or_die(t_philo *philo)
 		}
 		pthread_mutex_unlock(&(philo->info->mutex_of_dead_philo_flag));
 		put_down_fork(philo);
-		pthread_mutex_unlock(&(philo->mutex_of_eat));
 		return (KO);
 	}
 	else
 	{
 		philo->last_eat_time = get_millisec();
 		philo->eat_cnt++;
+		pthread_mutex_unlock(&(philo->mutex_of_eat));
 		pthread_mutex_lock(&philo->info->mutex_of_dead_philo_flag);
 		if (philo->info->dead_philo_flag == 0)
 			printf("%lld %d is eating\n",
@@ -94,7 +97,6 @@ int	eat_or_die(t_philo *philo)
 		pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
 		msleep(philo->info->time_to_eat);
 		put_down_fork(philo);
-		pthread_mutex_unlock(&(philo->mutex_of_eat));
 		return (OK);
 	}
 }
@@ -113,6 +115,7 @@ void	*thread_func_philo(void *philos)
 		if (!(philo->info->must_eat_count == 0
 				|| philo->eat_cnt < philo->info->must_eat_count))
 			break ;
+		pthread_mutex_unlock(&(philo->mutex_of_eat));
 		if (eat_or_die(philo) == KO)
 			return (NULL);
 		pthread_mutex_lock(&philo->info->mutex_of_dead_philo_flag);

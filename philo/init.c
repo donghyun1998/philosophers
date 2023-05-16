@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:31:47 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/16 21:46:35 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/17 00:58:08 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int	init_info(int argc, char **argv, t_info **info)
 	}
 	(*info)->full_philo_cnt = 0;
 	(*info)->dead_philo_flag = 0;
+	(*info)->start_thread_cnt = 0;
 	if (init_mutex_in_info(info) == KO)
 		return (KO);
 	return (OK);
