@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:53:43 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/16 21:38:48 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/16 22:24:16 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,14 @@ int	check_philo_is_alive(t_philo *philos, t_info *info)
 		if (get_millisec() - philos[i].last_eat_time >= info->time_to_die)
 		{
 			pthread_mutex_unlock(&(philos[i].mutex_of_eat));
+			// pthread_mutex_lock(&info->mutex_of_dead_philo_flag);
+			// if (info->dead_philo_flag == 0)
 			printf("%lld %d died\n", get_millisec() - info->start_time, i + 1);
+			// pthread_mutex_unlock(&info->mutex_of_dead_philo_flag);
 			return (KO);
 		}
-		pthread_mutex_unlock(&(philos[i].mutex_of_eat));
+		else
+			pthread_mutex_unlock(&(philos[i].mutex_of_eat));
 	}
 	return (OK);
 }
@@ -38,7 +42,6 @@ void	monitoring_thread(t_philo *philos, t_info *info)
 		pthread_mutex_lock(&(info->mutex_of_dead_philo_flag));
 		if (info->dead_philo_flag)
 		{
-			printf("에러\n");
 			pthread_mutex_unlock(&(info->mutex_of_dead_philo_flag));
 			return ;
 		}
