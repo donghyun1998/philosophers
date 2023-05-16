@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:56:23 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/16 20:07:32 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/16 21:30:49 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,6 @@ typedef struct s_philo
 	pthread_mutex_t	*left;
 	pthread_mutex_t	*right;
 	t_info			*info;
-	int				num_of_philos;
-	long long		time_to_die;
-	long long		time_to_eat;
-	long long		time_to_sleep;
-	int				must_eat_count;
-	long long		start_time;
 }	t_philo;
 
 int			ft_atoi(char *str);
@@ -64,4 +58,5 @@ int			init_info(int argc, char **argv, t_info **info);
 int			init_philos(t_philo **philos, t_info *info, pthread_mutex_t *forks);
 int			init_forks(pthread_mutex_t **forks, int num_of_philos);
 void		msleep(long long target_time);
+void		*thread_func_philo(void *philos);
 #endif
