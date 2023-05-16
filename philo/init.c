@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:31:47 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/16 19:23:17 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/16 20:33:56 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,14 @@ int init_info(int argc, char **argv, t_info **info)
 		if ((*info)->must_eat_count <= 0)
 			return (KO);
 	}
-	(*info)->start_time = get_current_millisec();
+	// (*info)->start_time = get_current_millisec();
 	(*info)->full_philo_cnt = 0;
 	(*info)->dead_philo_flag = 0;
 	if (pthread_mutex_init(&((*info)->mutex_of_full_philo_cnt), NULL) != OK)
 		return (KO);
 	if (pthread_mutex_init(&((*info)->mutex_of_dead_philo_flag), NULL) != OK)
+		return (KO);
+	if (pthread_mutex_init(&((*info)->mutex_of_start_flag), NULL) != OK)
 		return (KO);
 	return (OK);
 }
@@ -51,7 +53,7 @@ int init_philos(t_philo **philos, t_info *info, pthread_mutex_t *forks)
 	while (++i < info->num_of_philos)
 	{
 		(*philos)[i].id = i;
-		(*philos)[i].last_eat_time = info->start_time;
+		// (*philos)[i].last_eat_time = info->start_time;
 		(*philos)[i].eat_cnt = 0;
 		if (pthread_mutex_init(&((*philos)[i].mutex_of_eat), NULL) != OK)
 			return (KO);
@@ -63,7 +65,7 @@ int init_philos(t_philo **philos, t_info *info, pthread_mutex_t *forks)
 		(*philos)[i].time_to_eat = info->time_to_eat;
 		(*philos)[i].time_to_sleep = info->time_to_sleep;
 		(*philos)[i].must_eat_count = info->must_eat_count;
-		(*philos)[i].start_time = info->start_time;
+		// (*philos)[i].start_time = info->start_time;
 	}
 	return (OK);
 }

@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:56:23 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/16 19:21:03 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/16 20:07:32 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,17 @@
 
 typedef struct s_info
 {
-	int			num_of_philos;
-	long long	time_to_die;
-	long long	time_to_eat;
-	long long	time_to_sleep;
-	int			must_eat_count;
-	long long	start_time;
+	int				num_of_philos;
+	long long		time_to_die;
+	long long		time_to_eat;
+	long long		time_to_sleep;
+	int				must_eat_count;
+	long long		start_time;
 	pthread_mutex_t	mutex_of_full_philo_cnt;
-	int			full_philo_cnt;
+	int				full_philo_cnt;
 	pthread_mutex_t	mutex_of_dead_philo_flag;
-	int			dead_philo_flag;
+	int				dead_philo_flag;
+	pthread_mutex_t	mutex_of_start_flag;
 }	t_info;
 
 typedef struct s_philo
@@ -46,12 +47,12 @@ typedef struct s_philo
 	pthread_mutex_t	*left;
 	pthread_mutex_t	*right;
 	t_info			*info;
-	int			num_of_philos;
-	long long	time_to_die;
-	long long	time_to_eat;
-	long long	time_to_sleep;
-	int			must_eat_count;
-	long long	start_time;
+	int				num_of_philos;
+	long long		time_to_die;
+	long long		time_to_eat;
+	long long		time_to_sleep;
+	int				must_eat_count;
+	long long		start_time;
 }	t_philo;
 
 int			ft_atoi(char *str);
