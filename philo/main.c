@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:53:43 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/17 16:57:10 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/17 18:55:15 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,17 +64,13 @@ void	monitoring_thread(t_philo *philos, t_info *info)
 void	init_thread(t_philo *philos, t_info *info)
 {
 	int			i;
-	// pthread_t	thread_id;
 	int			num_of_philos;
 
 	i = -1;
 	num_of_philos = info->num_of_philos;
 	pthread_mutex_lock(&info->mutex_of_start_flag);
 	while (++i < num_of_philos)
-	{
 		pthread_create(&philos[i].thread_id , NULL, thread_func_philo, &philos[i]);
-		// pthread_detach(thread_id);
-	}
 	info->start_time = get_millisec();
 	pthread_mutex_unlock(&info->mutex_of_start_flag);
 	while (1)
@@ -119,5 +115,52 @@ int	main(int argc, char **argv)
 	while (++i < info->num_of_philos)
 		pthread_join(philos[i].thread_id, NULL);// 2번째 status 처리?
 	free_all(info, philos, forks);
-	// destroy_all_mutex(info, philos, forks);
 }
+
+
+// ///////////////////////////
+// pthread_mutex_lock(&philo->info->mutex_of_dead_philo_flag);
+// 	if (philo->info->dead_philo_flag == 0)
+// 		printf("%lld %d has taken a fork\n",
+// 			get_millisec() - philo->info->start_time, philo->id + 1);
+// 	else
+// 		{
+// 			pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
+// 			return (KO); // 나가야한 리턴값 만들어서
+// 		}
+// 	pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
+
+// 		pthread_mutex_lock(&(philo->info->mutex_of_dead_philo_flag));
+// 		if (philo->info->dead_philo_flag == 0)
+// 		{
+// 			printf("%lld %d died\n", get_millisec() - philo->info->start_time, philo->id + 1);
+// 			philo->info->dead_philo_flag = 1;
+// 		}
+// 		pthread_mutex_unlock(&(philo->info->mutex_of_dead_philo_flag));
+// 		put_down_fork(philo);
+// 		return (KO);
+
+// 		if (philo->info->dead_philo_flag == 0)
+// 			printf("%lld %d is eating\n",
+// 				get_millisec() - philo->info->start_time, philo->id + 1);
+// 		else
+// 		{
+// 			pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
+// 			put_down_fork(philo);
+// 			return (KO);
+// 		}
+// 		pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
+// 		msleep(philo->info->time_to_eat);
+// 		put_down_fork(philo);
+// 		return (OK);
+
+// pthread_mutex_lock(&philo->info->mutex_of_dead_philo_flag);
+// 		if (philo->info->dead_philo_flag == 0)
+// 			printf("%lld %d is sleeping\n",
+// 				get_millisec() - philo->info->start_time, philo->id + 1);
+// 		else
+// 		{
+// 			pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
+// 			return ;
+// 		}
+// 		pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);

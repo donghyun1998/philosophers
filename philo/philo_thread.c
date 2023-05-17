@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 21:29:32 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/17 16:56:08 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/17 18:46:22 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,18 +40,11 @@ int	pick_up_fork(t_philo *philo)
 }
 
 void	put_down_fork(t_philo *philo)
-{\
+{
 	pthread_mutex_unlock(philo->right);
 	pthread_mutex_unlock(philo->left);
 }
 
-void	check_start_flag(t_philo *philo)
-{
-	pthread_mutex_lock(&(philo->info->mutex_of_start_flag));
-	philo->last_eat_time = philo->info->start_time;
-	philo->info->start_thread_cnt += 1;
-	pthread_mutex_unlock(&(philo->info->mutex_of_start_flag));
-}
 
 int	eat_or_die(t_philo *philo)
 {
@@ -96,20 +89,21 @@ int	eat_or_die(t_philo *philo)
 void check_leak(void) {
 	system("leaks philo");
 }
-
-void	*thread_func_philo(void *philos)
+void	check_start_flag(t_philo *philo)
 {
-	t_philo	*philo;
+	pthread_mutex_lock(&(philo->info->mutex_of_start_flag));
+	philo->last_eat_time = philo->info->start_time;
+	philo->info->start_thread_cnt += 1;
+	pthread_mutex_unlock(&(philo->info->mutex_of_start_flag));
+}
 
-	philo = (t_philo *)philos;
-	check_start_flag(philo);
-	if (philo->id % 2 == 1)
-		usleep(1000);
+void	routine(t_philo *philo)
+{
 	while (42)
 	{
 		pthread_mutex_lock(&(philo->mutex_of_eat));
 		if (!(philo->info->must_eat_count == 0
-				|| philo->eat_cnt < philo->info->must_eat_count))
+				|| philo->eat_cnt < philo->info->must_eat_count)) // 배부른지 검사
 		{
 			pthread_mutex_lock(&(philo->info->mutex_of_full_philo_cnt));
 			philo->info->full_philo_cnt++;
@@ -118,7 +112,7 @@ void	*thread_func_philo(void *philos)
 		}
 		pthread_mutex_unlock(&(philo->mutex_of_eat));
 		if (eat_or_die(philo) == KO)
-			return (NULL);
+			return ;
 		pthread_mutex_lock(&philo->info->mutex_of_dead_philo_flag);
 		if (philo->info->dead_philo_flag == 0)
 			printf("%lld %d is sleeping\n",
@@ -126,7 +120,7 @@ void	*thread_func_philo(void *philos)
 		else
 		{
 			pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
-			return (NULL);
+			return ;
 		}
 		pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
 		msleep(philo->info->time_to_sleep);
@@ -137,9 +131,20 @@ void	*thread_func_philo(void *philos)
 		else
 		{
 			pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
-			return (NULL);
+			return ;
 		}
 		pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
 	}
+}
+
+void	*thread_func_philo(void *philos)
+{
+	t_philo	*philo;
+
+	philo = (t_philo *)philos;
+	check_start_flag(philo);
+	if (philo->id % 2 == 1)
+		usleep(1000);
+	routine(philo);
 	return (NULL);
 }
