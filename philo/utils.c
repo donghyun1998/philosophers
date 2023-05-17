@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 16:47:00 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/16 21:39:22 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/17 15:03:43 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,24 +38,36 @@ int	ft_atoi(char *str)
 	return (result);
 }
 
-void	free_all(t_info *info, t_philo *philos, pthread_mutex_t *forks)
+void	destroy_all_mutex(t_info *info, t_philo *philos, pthread_mutex_t *forks)
 {
 	int	i;
 	int	num_of_philos;
 
-	i = -1;
 	if (info)
 	{
 		num_of_philos = info->num_of_philos;
 		pthread_mutex_destroy(&(info->mutex_of_full_philo_cnt));
-		free(info);
+		pthread_mutex_destroy(&(info->mutex_of_dead_philo_flag));
+		pthread_mutex_destroy(&(info->mutex_of_start_flag));
 	}
+	i = -1;
+	if (philos)
+		while (++i < num_of_philos)
+			pthread_mutex_destroy(&(philos[i].mutex_of_eat));
+	i = -1;
+	if (forks)
+		while (++i < num_of_philos)
+			pthread_mutex_destroy(&forks[i]);
+}
+
+
+void	free_all(t_info *info, t_philo *philos, pthread_mutex_t *forks)
+{
+	destroy_all_mutex(info, philos, forks);
+	if (info)
+		free(info);
 	if (philos)
 		free (philos);
 	if (forks)
-	{
-		while (++i < num_of_philos)
-			pthread_mutex_destroy(&forks[i]);
 		free(forks);
-	}
 }
