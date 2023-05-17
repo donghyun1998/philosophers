@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 21:29:32 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/17 21:14:16 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/17 23:02:39 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@ int	print_in_mutex(t_philo *philo, char *message)
 	pthread_mutex_lock(&philo->info->mutex_of_dead_philo_flag);
 	if (philo->info->dead_philo_flag == 0)
 		printf("%lld %d %s\n", get_millisec() - philo->info->start_time,
-			 philo->id + 1, message);
+			philo->id + 1, message);
 	else
 	{
 		pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
-		return (KO); // 나가야한 리턴값 만들어서
+		return (KO);
 	}
 	pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
 	return (OK);
@@ -43,7 +43,6 @@ void	put_down_fork(t_philo *philo)
 	pthread_mutex_unlock(philo->right);
 	pthread_mutex_unlock(philo->left);
 }
-
 
 int	eat_or_die(t_philo *philo)
 {

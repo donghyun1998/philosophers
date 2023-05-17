@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:56:23 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/17 16:36:54 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/17 23:04:28 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,5 +60,6 @@ int			init_philos(t_philo **philos, t_info *info, pthread_mutex_t *forks);
 int			init_forks(pthread_mutex_t **forks, int num_of_philos);
 void		msleep(long long target_time);
 void		*thread_func_philo(void *philos);
-void		destroy_all_mutex(t_info *info, t_philo *philos, pthread_mutex_t *forks);
+void		destroy_all_mutex(t_info *info, t_philo *philos,
+				pthread_mutex_t *forks);
 #endif

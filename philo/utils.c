@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 16:47:00 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/17 15:03:43 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/17 23:02:53 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ void	destroy_all_mutex(t_info *info, t_philo *philos, pthread_mutex_t *forks)
 		while (++i < num_of_philos)
 			pthread_mutex_destroy(&forks[i]);
 }
-
 
 void	free_all(t_info *info, t_philo *philos, pthread_mutex_t *forks)
 {

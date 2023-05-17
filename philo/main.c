@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 19:53:43 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/17 21:17:15 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/17 23:04:00 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,8 @@ void	init_thread(t_philo *philos, t_info *info)
 	num_of_philos = info->num_of_philos;
 	pthread_mutex_lock(&info->mutex_of_start_flag);
 	while (++i < num_of_philos)
-		pthread_create(&philos[i].thread_id, NULL, thread_func_philo, &philos[i]);
+		pthread_create(&philos[i].thread_id, NULL, thread_func_philo,
+			&philos[i]);
 	info->start_time = get_millisec();
 	pthread_mutex_unlock(&info->mutex_of_start_flag);
 	while (1)
@@ -89,14 +90,9 @@ void	init_thread(t_philo *philos, t_info *info)
 	}
 }
 
-// void	leaks(void)
-// {
-// 	system("leaks philo");
-// }
-
 void	join_thread(t_info *info, t_philo *philos, pthread_mutex_t *forks)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	while (++i < info->num_of_philos)
@@ -106,14 +102,12 @@ void	join_thread(t_info *info, t_philo *philos, pthread_mutex_t *forks)
 	}
 }
 
-
 int	main(int argc, char **argv)
 {
 	t_info			*info;
 	t_philo			*philos;
 	pthread_mutex_t	*forks;
 
-	// atexit(leaks);
 	info = NULL;
 	philos = NULL;
 	forks = NULL;
