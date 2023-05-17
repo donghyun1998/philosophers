@@ -6,36 +6,35 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 21:29:32 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/17 18:46:22 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/17 19:23:59 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+int	print_in_mutex(t_philo *philo, char *message)
+{
+	pthread_mutex_lock(&philo->info->mutex_of_dead_philo_flag);
+	if (philo->info->dead_philo_flag == 0)
+		printf("%lld %d %s\n", get_millisec() - philo->info->start_time,
+			 philo->id + 1, message);
+	else
+	{
+		pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
+		return (KO); // 나가야한 리턴값 만들어서
+	}
+	pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
+	return (OK);
+}
+
 int	pick_up_fork(t_philo *philo)
 {
 	pthread_mutex_lock(philo->left);
-	pthread_mutex_lock(&philo->info->mutex_of_dead_philo_flag);
-	if (philo->info->dead_philo_flag == 0)
-		printf("%lld %d has taken a fork\n",
-			get_millisec() - philo->info->start_time, philo->id + 1);
-	else
-		{
-			pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
-			return (KO); // 나가야한 리턴값 만들어서
-		}
-	pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
+	if (print_in_mutex(philo, "has taken a fork") == KO)
+		return (KO);
 	pthread_mutex_lock(philo->right);
-	pthread_mutex_lock(&philo->info->mutex_of_dead_philo_flag);
-	if (philo->info->dead_philo_flag == 0)
-		printf("%lld %d has taken a fork\n",
-			get_millisec() - philo->info->start_time, philo->id + 1);
-	else
-		{
-			pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
-			return (KO); // 나가야한 리턴값 만들어서
-		}
-	pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
+	if (print_in_mutex(philo, "has taken a fork") == KO)
+		return (KO);
 	return (OK);
 }
 
@@ -57,7 +56,7 @@ int	eat_or_die(t_philo *philo)
 		pthread_mutex_lock(&(philo->info->mutex_of_dead_philo_flag));
 		if (philo->info->dead_philo_flag == 0)
 		{
-			printf("%lld %d died\n", get_millisec() - philo->info->start_time, philo->id + 1);
+			printf("%lld %d died", get_millisec() - philo->info->start_time, philo->id + 1);
 			philo->info->dead_philo_flag = 1;
 		}
 		pthread_mutex_unlock(&(philo->info->mutex_of_dead_philo_flag));
@@ -69,17 +68,11 @@ int	eat_or_die(t_philo *philo)
 		philo->last_eat_time = get_millisec();
 		philo->eat_cnt++;
 		pthread_mutex_unlock(&(philo->mutex_of_eat));
-		pthread_mutex_lock(&philo->info->mutex_of_dead_philo_flag);
-		if (philo->info->dead_philo_flag == 0)
-			printf("%lld %d is eating\n",
-				get_millisec() - philo->info->start_time, philo->id + 1);
-		else
+		if (print_in_mutex(philo, "is eating") == KO)
 		{
-			pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
 			put_down_fork(philo);
 			return (KO);
 		}
-		pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
 		msleep(philo->info->time_to_eat);
 		put_down_fork(philo);
 		return (OK);
@@ -105,35 +98,21 @@ void	routine(t_philo *philo)
 		if (!(philo->info->must_eat_count == 0
 				|| philo->eat_cnt < philo->info->must_eat_count)) // 배부른지 검사
 		{
+			pthread_mutex_unlock(&(philo->mutex_of_eat));
 			pthread_mutex_lock(&(philo->info->mutex_of_full_philo_cnt));
 			philo->info->full_philo_cnt++;
 			pthread_mutex_unlock(&(philo->info->mutex_of_full_philo_cnt));
 			// break ;
+			return ;
 		}
 		pthread_mutex_unlock(&(philo->mutex_of_eat));
 		if (eat_or_die(philo) == KO)
 			return ;
-		pthread_mutex_lock(&philo->info->mutex_of_dead_philo_flag);
-		if (philo->info->dead_philo_flag == 0)
-			printf("%lld %d is sleeping\n",
-				get_millisec() - philo->info->start_time, philo->id + 1);
-		else
-		{
-			pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
+		if (print_in_mutex(philo, "is sleeping") == KO)
 			return ;
-		}
-		pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
 		msleep(philo->info->time_to_sleep);
-		pthread_mutex_lock(&philo->info->mutex_of_dead_philo_flag);
-		if (philo->info->dead_philo_flag == 0)
-			printf("%lld %d is thinking\n",
-				get_millisec() - philo->info->start_time, philo->id + 1);
-		else
-		{
-			pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
+		if (print_in_mutex(philo, "is thinking") == KO)
 			return ;
-		}
-		pthread_mutex_unlock(&philo->info->mutex_of_dead_philo_flag);
 	}
 }
 
