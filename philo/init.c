@@ -6,7 +6,7 @@
 /*   By: donghyk2 <donghyk2@student.42.kr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 17:31:47 by donghyk2          #+#    #+#             */
-/*   Updated: 2023/05/17 00:58:08 by donghyk2         ###   ########.fr       */
+/*   Updated: 2023/05/17 20:30:42 by donghyk2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	init_philos(t_philo **philos, t_info *info, pthread_mutex_t *forks)
 		(*philos)[i].eat_cnt = 0;
 		if (pthread_mutex_init(&((*philos)[i].mutex_of_eat), NULL) != OK)
 			return (KO);
-		(*philos)[i].left = &forks[i % info->num_of_philos];
+		(*philos)[i].left = &forks[i];
 		(*philos)[i].right = &forks[(i + 1) % info->num_of_philos];
 		(*philos)[i].info = info;
 	}
